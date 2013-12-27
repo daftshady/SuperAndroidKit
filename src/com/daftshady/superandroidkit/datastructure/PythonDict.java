@@ -1,4 +1,4 @@
-package com.daftshady.datastructure;
+package com.daftshady.superandroidkit.datastructure;
 
 /**
  * Provides python-style dictionary form in string

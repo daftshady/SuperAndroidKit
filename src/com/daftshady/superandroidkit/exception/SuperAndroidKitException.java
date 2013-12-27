@@ -1,4 +1,4 @@
-package com.daftshady.superandrodikit.exception;
+package com.daftshady.superandroidkit.exception;
 
 /**
  * Provides an error condition.
