@@ -2,7 +2,6 @@ package com.daftshady.superandroidkit.utils;
 
 import java.util.HashMap;
 
-
 /**
  * Provides static methods for creating mutable instances easily.
  * @author parkilsu
