@@ -13,23 +13,76 @@ import java.util.Locale;
 public class DateUtils {
 	public static final String DATE_FORMAT = "yyyy-MM-dd G HH:mm:ss z";
 	
-	public static String getCurrentTime() {
-		return formatDate(Calendar.getInstance().getTime());
+	/**
+	 * Returns current time with default `DATE_FORMAT`
+	 * @param dateFormat
+	 * @return
+	 */
+	public static String getCurrentTime(String dateFormat) {
+		return formatDate(Calendar.getInstance().getTime(), dateFormat);
 	}
 	
-	public static String getTimeDelta(long delta) {
+	/**
+	 * Returns time delta from current time with `dateFormat`
+	 * @param delta
+	 * 		millis of time delta
+	 * @param dateFormat
+	 * 		Date format
+	 * @return
+	 *		Formatted time delta string 
+	 */
+	public static String getTimeDelta(long delta, String dateFormat) {
 		Calendar current = Calendar.getInstance();
 		current.setTimeInMillis(current.getTimeInMillis() + delta);
-		return formatDate(current.getTime());
+		return formatDate(current.getTime(), dateFormat);
 	}
 	
-	private static String formatDate(Date date) {
+	/**
+	 * Returns date delta from current time with `dateFormat`
+	 * @param delta
+	 * 		Value for `days` delta.
+	 * @param dateFormat
+	 * @return
+	 */
+	public static String getDateDelta(int delta, String dateFormat) {
+		Calendar current = Calendar.getInstance();
+		current.add(Calendar.DATE, delta);
+		return formatDate(current.getTime(), dateFormat);
+	}
+	
+	/**
+	 * Format date with default `DATE_FORMAT` and default locale `Locale.KOREA`
+	 * @param date
+	 * @return
+	 */
+	public static String formatDate(Date date) {
 		return formatDate(date, DATE_FORMAT);
 	}
 	
-	private static String formatDate(Date date, String dateFormat) {
+	/**
+	 * Format date with `dateFormat` given and default locale `Locale.KOREA`
+	 * @param date
+	 * @param dateFormat
+	 * @return
+	 */
+	public static String formatDate(Date date, String dateFormat) {
+		return formatDate(date, dateFormat, Locale.KOREA);
+	}
+	
+	/**
+	 * Format date
+	 * @param date
+	 * 		`Date` formatted to
+	 * @param dateFormat
+	 * 		Date format like 'yyyy-MM-dd'
+	 * @param locale
+	 * 		Locale for date format.
+	 * @return
+	 *		Formatted date string 
+	 */
+	public static String formatDate(Date date, String dateFormat, Locale locale) {
 		SimpleDateFormat format = 
-				new SimpleDateFormat(dateFormat, Locale.KOREA);
-		return format.format(date);
+				new SimpleDateFormat(dateFormat, locale);
+		return format.format(date);	
 	}
 }
