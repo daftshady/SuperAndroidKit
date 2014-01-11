@@ -41,6 +41,15 @@ public class SuperSharedPreferences {
 	}
 	
 	/**
+	 * Check whether the file already has that key.
+	 * @param key
+	 * @return
+	 */
+	public boolean hasKey(String key) {
+		return get(key) != null;
+	}
+	
+	/**
 	 * Remove matched value for `key`
 	 * @param key
 	 * @return
