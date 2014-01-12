@@ -14,8 +14,8 @@ public class SuperSharedPreferences {
 	
 	private SharedPreferences mPreferences;
 	
-	public SuperSharedPreferences(Activity activity, String fileName) {
-		mPreferences = activity.getSharedPreferences(fileName, Context.MODE_PRIVATE);
+	public SuperSharedPreferences(Context context, String fileName) {
+		mPreferences = context.getSharedPreferences(fileName, Context.MODE_PRIVATE);
 	}
 	
 	/**
