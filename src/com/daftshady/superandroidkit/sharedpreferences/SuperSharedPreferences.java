@@ -11,13 +11,13 @@ import android.content.SharedPreferences;
  *
  */
 public class SuperSharedPreferences {
-	
+
 	private SharedPreferences mPreferences;
-	
+
 	public SuperSharedPreferences(Context context, String fileName) {
 		mPreferences = context.getSharedPreferences(fileName, Context.MODE_PRIVATE);
 	}
-	
+
 	/**
 	 * Get matched value for key.
 	 * @param key
@@ -27,7 +27,7 @@ public class SuperSharedPreferences {
 	public String get(String key) {
 		return mPreferences.getString(key, null);
 	}
-	
+
 	/**
 	 * Set (key, value) pair to `SharedPreference`
 	 * @param key
@@ -39,7 +39,7 @@ public class SuperSharedPreferences {
 		editor.putString(key, value);
 		return editor.commit();
 	}
-	
+
 	/**
 	 * Check whether the file already has that key.
 	 * @param key
@@ -48,7 +48,7 @@ public class SuperSharedPreferences {
 	public boolean hasKey(String key) {
 		return get(key) != null;
 	}
-	
+
 	/**
 	 * Remove matched value for `key`
 	 * @param key
@@ -60,7 +60,7 @@ public class SuperSharedPreferences {
 		editor.remove(key);
 		return editor.commit();
 	}
-	
+
 	/**
 	 * Remove all data from `SharedPreference`
 	 * @return
