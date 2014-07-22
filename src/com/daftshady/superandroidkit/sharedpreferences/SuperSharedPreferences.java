@@ -1,6 +1,5 @@
 package com.daftshady.superandroidkit.sharedpreferences;
 
-import android.app.Activity;
 import android.content.Context;
 import android.content.SharedPreferences;
 

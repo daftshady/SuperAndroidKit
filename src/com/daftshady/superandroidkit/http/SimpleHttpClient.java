@@ -1,5 +1,9 @@
 package com.daftshady.superandroidkit.http;
 
+import java.io.UnsupportedEncodingException;
+import android.content.Context;
+import org.apache.http.entity.ByteArrayEntity;
+import org.json.JSONObject;
 import com.loopj.android.http.AsyncHttpClient;
 import com.loopj.android.http.AsyncHttpResponseHandler;
 import com.loopj.android.http.RequestParams;
@@ -25,7 +29,7 @@ public class SimpleHttpClient {
 	 * 		If null, it will be replaced with empty handler.
 	 */
 	public static void get(
-			String url, RequestParams params, AsyncHttpResponseHandler responseHandler) {
+			String url, RequestParams params, SimpleHttpResponse responseHandler) {
 		AsyncHttpResponseHandler handler = 
 				responseHandler != null ? 
 						responseHandler : new AsyncHttpResponseHandler();
@@ -48,5 +52,32 @@ public class SimpleHttpClient {
 				responseHandler != null ? 
 						responseHandler : new AsyncHttpResponseHandler();
 		asyncHttpClient.post(url, params, handler);
+	}
+	
+	/**
+	 * Send HTTP `POST` request with JSON params.
+	 * @param context
+	 * 		Application context
+	 * @param url
+	 * 		`URL` request is sent to.
+	 * @param params
+	 * 		`Parameters` which goes with `POST` request.
+	 * @param responseHandler
+	 * 		Async handler for HTTP response.	
+	 * 		If null, it will be replaced with empty handler.
+	 * @throws UnsupportedEncodingException
+	 */
+	public static void post(
+			Context context, String url, JSONObject params, AsyncHttpResponseHandler responseHandler) 
+					throws UnsupportedEncodingException {
+		AsyncHttpResponseHandler handler = 
+				responseHandler != null ? 
+						responseHandler : new AsyncHttpResponseHandler();
+		asyncHttpClient.post(
+				context, 
+				url, 
+				new ByteArrayEntity(params.toString().getBytes("UTF-8")), 
+				"application/json", 
+				handler);
 	}
 }
