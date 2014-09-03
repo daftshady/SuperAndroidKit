@@ -21,11 +21,12 @@ import android.accounts.AccountsException;
 import android.app.Activity;
 import android.content.Context;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.util.Log;
 
 public class AccountUtils {
 	
-	private static final String TAG = "MverseAccountUtils";
+	private static final String TAG = "SuperAndroidKitAccountUtils";
 
 	private static class AccountException extends IOException {
 		private static final long serialVersionUID = 1L;
@@ -96,7 +97,7 @@ public class AccountUtils {
 		AccountManager manager = AccountManager.get(context);
 		for (Account account : getAccounts(context, accountType)) {
 			String token = manager.peekAuthToken(account, tokenType);
-			if (token != null && !token.isEmpty())
+			if (!TextUtils.isEmpty(token))
 				return account;
 		}
 		return null;
@@ -192,7 +193,7 @@ public class AccountUtils {
 			String authTokenType) {
 		try {
 			final AccountManagerFuture<Bundle> future = AccountManager.get(
-					context).getAuthToken(getAccount(context, accountType), authTokenType,
+					context).getAuthToken(getAccount(context, accountType, authTokenType), authTokenType,
 					null, null, null, null);
 			Bundle result = future.getResult();
 			if (result == null)
