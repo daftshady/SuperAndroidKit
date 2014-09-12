@@ -33,10 +33,11 @@ public class SimpleHttpClient {
 	 *            Async handler for HTTP response. If null, it will be replaced
 	 *            with empty handler.
 	 */
-	public static void get(String url, RequestParams params,
-			AsyncHttpResponseHandler responseHandler) {
-		AsyncHttpResponseHandler handler = responseHandler != null ? responseHandler
-				: new AsyncHttpResponseHandler();
+	public static void get(
+			String url, RequestParams params, SimpleHttpResponse responseHandler) {
+		AsyncHttpResponseHandler handler = 
+				responseHandler != null ? 
+						responseHandler : new AsyncHttpResponseHandler();
 		asyncHttpClient.get(url, params, handler);
 	}
 
@@ -57,13 +58,30 @@ public class SimpleHttpClient {
 				: new AsyncHttpResponseHandler();
 		asyncHttpClient.post(url, params, handler);
 	}
-
-	public static void post(Context context, String url, JSONObject params,
-			SimpleHttpResponse responseHandler) throws UnsupportedEncodingException {
-		AsyncHttpResponseHandler handler = responseHandler != null ? responseHandler
-				: new AsyncHttpResponseHandler();
-		ByteArrayEntity entity = new ByteArrayEntity(params.toString()
-				.getBytes("UTF-8"));
-		asyncHttpClient.post(context, url, entity, "application/json", handler);
+	/**
+	 * Send HTTP `POST` request with JSON params.
+	 * @param context
+	 * 		Application context
+	 * @param url
+	 * 		`URL` request is sent to.
+	 * @param params
+	 * 		`Parameters` which goes with `POST` request.
+	 * @param responseHandler
+	 * 		Async handler for HTTP response.	
+	 * 		If null, it will be replaced with empty handler.
+	 * @throws UnsupportedEncodingException
+	 */
+	public static void post(
+			Context context, String url, JSONObject params, AsyncHttpResponseHandler responseHandler) 
+					throws UnsupportedEncodingException {
+		AsyncHttpResponseHandler handler = 
+				responseHandler != null ? 
+						responseHandler : new AsyncHttpResponseHandler();
+		asyncHttpClient.post(
+				context, 
+				url, 
+				new ByteArrayEntity(params.toString().getBytes("UTF-8")), 
+				"application/json", 
+				handler);
 	}
 }
