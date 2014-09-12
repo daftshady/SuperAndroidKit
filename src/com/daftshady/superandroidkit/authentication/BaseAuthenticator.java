@@ -16,46 +16,50 @@ import android.os.Bundle;
 import android.text.TextUtils;
 
 /**
- * Should inherit this to make authenticator class dealing with
- * android account commands reachable by users.
+ * Should inherit this to make authenticator class dealing with android account
+ * commands reachable by users.
+ * 
  * @author parkilsu
  *
  */
-public abstract class BaseAuthenticator 
-	extends AbstractAccountAuthenticator {
-	
+public abstract class BaseAuthenticator extends AbstractAccountAuthenticator {
+
 	protected Context mContext;
-	
+
 	protected AccountManager mManager;
-	
+
 	protected AbstractAccount mAccount;
-	
+
 	protected String tokenType;
-	
+
 	protected BaseAuthenticator(Context context) {
 		super(context);
 		mManager = AccountManager.get(context);
 		mContext = context;
 	}
-	
+
 	/**
-	 * This method should be implemented.
-	 * Real class can inject activity into `BaseAuthenticator` by this method.
+	 * This method should be implemented. Real class can inject activity into
+	 * `BaseAuthenticator` by this method.
+	 * 
 	 * @param response
 	 * @return intent
 	 */
-	protected abstract Intent createActivityIntent(AccountAuthenticatorResponse response);
-	
+	protected abstract Intent createActivityIntent(
+			AccountAuthenticatorResponse response);
+
 	/**
-	 * This method should be implemented.
-	 * Interaction with auth-server should be wrapped by this method.
+	 * This method should be implemented. Interaction with auth-server should be
+	 * wrapped by this method.
+	 * 
 	 * @return authKey
 	 */
 	protected abstract String signIn(String userName, String userPass);
-	
+
 	@Override
-	public Bundle addAccount(AccountAuthenticatorResponse response, String accountType,
-			String authTokenType, String[] requiredFeatures, Bundle options)
+	public Bundle addAccount(AccountAuthenticatorResponse response,
+			String accountType, String authTokenType,
+			String[] requiredFeatures, Bundle options)
 			throws NetworkErrorException {
 		final Intent intent = createActivityIntent(response);
 		intent.putExtra(KEY_ACCOUNT_AUTHENTICATOR_RESPONSE, response);
@@ -63,7 +67,7 @@ public abstract class BaseAuthenticator
 		bundle.putParcelable(KEY_INTENT, intent);
 		return bundle;
 	}
-	
+
 	@Override
 	public Bundle confirmCredentials(AccountAuthenticatorResponse arg0,
 			Account arg1, Bundle arg2) throws NetworkErrorException {
@@ -74,22 +78,24 @@ public abstract class BaseAuthenticator
 	public Bundle editProperties(AccountAuthenticatorResponse arg0, String arg1) {
 		return null;
 	}
-	
+
 	@Override
-	public Bundle getAuthToken(AccountAuthenticatorResponse response, Account account, 
-			String authTokenType, Bundle options) throws NetworkErrorException {
+	public Bundle getAuthToken(AccountAuthenticatorResponse response,
+			Account account, String authTokenType, Bundle options)
+			throws NetworkErrorException {
 		String authToken = mManager.peekAuthToken(account, authTokenType);
-		if(TextUtils.isEmpty(authToken)) {
+		if (TextUtils.isEmpty(authToken)) {
 			String userName = account.name;
 			String userPass = mManager.getPassword(account);
-			if(userPass == null) 
-				return loginRetry(response, account);
-			
-			authToken = signIn(userName, userPass);
-			if(authToken == null)
-				return loginRetry(response, account);
+			if (userPass != null) {
+				authToken = signIn(userName, userPass);
+			}
 		}
-		
+
+		if (TextUtils.isEmpty(authToken)) {
+			return loginRetry(response, account);
+		}
+
 		mManager.setAuthToken(account, authTokenType, authToken);
 		final Bundle result = new Bundle();
 		result.putString(KEY_ACCOUNT_NAME, mAccount.getName());
@@ -97,15 +103,17 @@ public abstract class BaseAuthenticator
 		result.putString(KEY_AUTHTOKEN, mAccount.getAuthToken());
 		return result;
 	}
-	
+
 	/**
-	 * If user have failed to sign in, re-try is needed.
-	 * This method creates intent of login activity for user to re-try login.
+	 * If user have failed to sign in, re-try is needed. This method creates
+	 * intent of login activity for user to re-try login.
+	 * 
 	 * @param response
 	 * @param account
 	 * @return login information
 	 */
-	private Bundle loginRetry(AccountAuthenticatorResponse response, Account account) {
+	private Bundle loginRetry(AccountAuthenticatorResponse response,
+			Account account) {
 		final Intent intent = createActivityIntent(response);
 		intent.putExtra(KEY_ACCOUNT_AUTHENTICATOR_RESPONSE, response);
 		intent.putExtra(AccountConstants.PARAM_USERNAME, account.name);
@@ -131,6 +139,5 @@ public abstract class BaseAuthenticator
 			throws NetworkErrorException {
 		return null;
 	}
-
 
 }
