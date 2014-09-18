@@ -173,7 +173,7 @@ public abstract class AbstractAccount {
 			Bundle result = future.getResult();
 			if (result == null)
 				return null;
-			return result.getString(AccountManager.KEY_AUTHTOKEN, null);
+			return result.getString(AccountManager.KEY_AUTHTOKEN);
 		} catch (AccountsException e) {
 			Log.e(TAG, "Fatal error : server has invalid auth information", e);
 			return null;
@@ -216,8 +216,7 @@ public abstract class AbstractAccount {
 					Bundle result = future.getResult();
 					String token = null;
 					if (result != null) {
-						token = result.getString(AccountManager.KEY_AUTHTOKEN,
-								null);
+						token = result.getString(AccountManager.KEY_AUTHTOKEN);
 					}
 					listener.onGetAuthToken(token);
 				} catch (OperationCanceledException e) {

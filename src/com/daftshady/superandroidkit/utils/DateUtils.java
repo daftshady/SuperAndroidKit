@@ -5,6 +5,8 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
 
+import android.net.ParseException;
+
 /**
  * Provides `Date` utility methods.
  * @author parkilsu
@@ -66,7 +68,7 @@ public class DateUtils {
 	 * @return
 	 */
 	public static String formatDate(Date date, String dateFormat) {
-		return formatDate(date, dateFormat, Locale.KOREA);
+		return formatDate(date, dateFormat, Locale.ENGLISH);
 	}
 	
 	/**
@@ -84,5 +86,21 @@ public class DateUtils {
 		SimpleDateFormat format = 
 				new SimpleDateFormat(dateFormat, locale);
 		return format.format(date);	
+	}
+	
+	public static Date fromString(String dateStr) throws java.text.ParseException{
+		return fromString(dateStr, DATE_FORMAT);
+	}
+
+	public static Date fromString(String dateStr, String dateFormat) 
+			throws java.text.ParseException{
+		return fromString(dateStr, dateFormat, Locale.ENGLISH);
+	}
+	
+	public static Date fromString(String dateStr, String dateFormat, Locale locale)
+			throws java.text.ParseException{
+		SimpleDateFormat format = 
+				new SimpleDateFormat(dateFormat, locale);
+		return format.parse(dateStr);
 	}
 }

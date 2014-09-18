@@ -2,6 +2,7 @@ package com.daftshady.superandroidkit.database;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -38,10 +39,19 @@ public class BaseCursorManager {
 			DbColumn[] columns = (DbColumn[]) klass.getMethod("getColumns",
 					null).invoke(model, null);
 			for (DbColumn column : columns) {
-				String columnName = StringUtils.toLowerCamelCase(column.getName());
+				String columnName = StringUtils.toLowerCamelCase(column
+						.getName());
 				Field field = klass.getDeclaredField(columnName);
-				field.setAccessible(true);
-				field.set(model, field.getType().cast(getValue(column)));
+				String setMethodName = "set"
+						+ StringUtils.toCamelCase(column.getName());
+				try {
+					Method setMethod = klass.getMethod(setMethodName,
+							field.getType());
+					setMethod.invoke(model, getValue(column));
+				} catch (NoSuchMethodException e) {
+					field.setAccessible(true);
+					field.set(model, field.getType().cast(getValue(column)));
+				}
 			}
 		} catch (IllegalAccessException e) {
 			throw new IllegalArgumentException("Cannot access to method!");
@@ -84,6 +94,13 @@ public class BaseCursorManager {
 		case LONG:
 			value = mCursor.getLong(columnIndex);
 			break;
+		case DATE:
+			try {
+				value = mCursor.getString(columnIndex);
+				value = DateUtils.fromString((String)value, BaseDbModel.DB_DATE_FORMAT);
+			} catch (ParseException e) {
+				value = null;
+			}
 		}
 		return value;
 	}
