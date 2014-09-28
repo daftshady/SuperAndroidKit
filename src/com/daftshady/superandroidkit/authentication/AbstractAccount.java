@@ -246,11 +246,8 @@ public abstract class AbstractAccount {
 		}
 	}
 
-	/**
-	 * Invalidate local token cache. Why android does not support invalidating
-	 * one account?
-	 */
 	public void invalidateAuthToken() {
-		mAccountManager.invalidateAuthToken(accountType(), tokenType());
+		mAccountManager
+				.invalidateAuthToken(accountType(), getCachedAuthToken());
 	}
 }

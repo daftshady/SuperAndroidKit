@@ -28,10 +28,6 @@ public abstract class BaseAuthenticator extends AbstractAccountAuthenticator {
 
 	protected AccountManager mManager;
 
-	protected AbstractAccount mAccount;
-
-	protected String tokenType;
-
 	protected BaseAuthenticator(Context context) {
 		super(context);
 		mManager = AccountManager.get(context);
@@ -98,9 +94,9 @@ public abstract class BaseAuthenticator extends AbstractAccountAuthenticator {
 
 		mManager.setAuthToken(account, authTokenType, authToken);
 		final Bundle result = new Bundle();
-		result.putString(KEY_ACCOUNT_NAME, mAccount.getName());
-		result.putString(KEY_ACCOUNT_TYPE, mAccount.getType());
-		result.putString(KEY_AUTHTOKEN, mAccount.getAuthToken());
+		result.putString(KEY_ACCOUNT_NAME, account.name);
+		result.putString(KEY_ACCOUNT_TYPE, account.type);
+		result.putString(KEY_AUTHTOKEN, authToken);
 		return result;
 	}
 

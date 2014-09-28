@@ -41,16 +41,21 @@ public class BaseCursorManager {
 			for (DbColumn column : columns) {
 				String columnName = StringUtils.toLowerCamelCase(column
 						.getName());
-				Field field = klass.getDeclaredField(columnName);
-				String setMethodName = "set"
-						+ StringUtils.toCamelCase(column.getName());
 				try {
-					Method setMethod = klass.getMethod(setMethodName,
-							field.getType());
-					setMethod.invoke(model, getValue(column));
-				} catch (NoSuchMethodException e) {
-					field.setAccessible(true);
-					field.set(model, field.getType().cast(getValue(column)));
+					Field field = klass.getDeclaredField(columnName);
+					String setMethodName = "set"
+							+ StringUtils.toCamelCase(column.getName());
+					try {
+						Method setMethod = klass.getMethod(setMethodName,
+								field.getType());
+						setMethod.invoke(model, getValue(column));
+					} catch (NoSuchMethodException e) {
+						field.setAccessible(true);
+						field.set(model, field.getType().cast(getValue(column)));
+					}
+				} catch (NoSuchFieldException e) {
+					// skip undeclared field
+					continue;
 				}
 			}
 		} catch (IllegalAccessException e) {
@@ -61,8 +66,6 @@ public class BaseCursorManager {
 		} catch (NoSuchMethodException e) {
 			throw new IllegalArgumentException(
 					"Model must be extended from BaseDbModel.");
-		} catch (NoSuchFieldException e) {
-			throw new IllegalArgumentException("Model has undeclared field.");
 		}
 
 		return model;
@@ -97,7 +100,8 @@ public class BaseCursorManager {
 		case DATE:
 			try {
 				value = mCursor.getString(columnIndex);
-				value = DateUtils.fromString((String)value, BaseDbModel.DB_DATE_FORMAT);
+				value = DateUtils.fromString((String) value,
+						BaseDbModel.DB_DATE_FORMAT);
 			} catch (ParseException e) {
 				value = null;
 			}
