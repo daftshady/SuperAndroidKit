@@ -105,6 +105,13 @@ public class BaseCursorManager {
 			} catch (ParseException e) {
 				value = null;
 			}
+			break;
+		case BOOLEAN:
+			value = mCursor.getInt(columnIndex);
+			if (value != null) {
+				value = ((Integer)value) > 0 ? true : false;
+			}
+			break;
 		}
 		return value;
 	}
