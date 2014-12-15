@@ -76,8 +76,10 @@ public class AccountUtils {
 		for (Account account : accounts) {
 			String seqId = manager.getUserData(account,
 					AccountConstants.ACCOUNT_SEQ_ID);
-			if (seqId == null)
+			if (seqId == null) {
+				manager.removeAccount(account, null, null);
 				return null;
+			}
 
 			if (Integer.parseInt(seqId) > max) {
 				max = Integer.parseInt(seqId);
@@ -137,10 +139,13 @@ public class AccountUtils {
 			try {
 				future.getResult();
 			} catch (OperationCanceledException e) {
+				e.printStackTrace();
 				return null;
 			} catch (AuthenticatorException e) {
+				e.printStackTrace();
 				return null;
 			} catch (IOException e) {
+				e.printStackTrace();
 				return null;
 			}
 		}
